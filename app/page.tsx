@@ -109,7 +109,7 @@ function HomeContent() {
 
 				// Calculate macros
 				const macros = calculateMacrosFromIngredients(
-					recipeIngredients.map((ri) => ({
+					recipeIngredients.map((ri: { ingredientId: string; quantity: number; unit: string }) => ({
 						ingredientId: ri.ingredientId,
 						quantity: ri.quantity,
 						unit: ri.unit,
