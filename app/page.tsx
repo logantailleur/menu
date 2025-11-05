@@ -384,7 +384,7 @@ function RecipeGrid({
 						<div>
 							<h3 className="heading-3">Steps</h3>
 							<ol className="space-y-2 sm:space-y-3 pl-2 sm:pl-4">
-								{steps.map((step) => (
+								{steps.map((step: { id: string; stepNumber: number; instruction: string; duration?: number | null }) => (
 									<li
 										key={step.id}
 										className="text-primary-muted text-xs sm:text-sm"

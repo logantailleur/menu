@@ -269,7 +269,9 @@ export const calculateRecipeMacros = (
 		if (!ingredient) return;
 
 		// Parse serving size to get the number and unit
-		const servingSizeParsed = parseServingSize(ingredient.servingSize);
+		// Default to "100g" if servingSize is not available (since macros are per 100g)
+		const servingSize = (ingredient as any).servingSize || "100g";
+		const servingSizeParsed = parseServingSize(servingSize);
 		if (!servingSizeParsed) return;
 
 		// Calculate multiplier: how many servings of the ingredient are used
@@ -286,7 +288,9 @@ export const calculateRecipeMacros = (
 		}
 
 		const macros = ingredient.macrosPerServing;
-		totalMacros.calories += macros.calories * multiplier;
+		if (macros.calories !== undefined) {
+			totalMacros.calories = (totalMacros.calories || 0) + macros.calories * multiplier;
+		}
 		totalMacros.protein += macros.protein * multiplier;
 		totalMacros.carbs += macros.carbs * multiplier;
 		totalMacros.fat += macros.fat * multiplier;
@@ -302,7 +306,9 @@ export const calculateRecipeMacros = (
 
 	// Calculate per serving
 	if (servings > 0) {
-		totalMacros.calories = Math.round(totalMacros.calories / servings);
+		if (totalMacros.calories !== undefined) {
+			totalMacros.calories = Math.round(totalMacros.calories / servings);
+		}
 		totalMacros.protein =
 			Math.round((totalMacros.protein * 10) / servings) / 10;
 		totalMacros.carbs =
