@@ -81,7 +81,7 @@ export default function LoginPage() {
 
 					{isSignUp && (
 						<div className="alert-info">
-							<strong>Note:</strong> After signing up, you'll need to confirm your email address before you can sign in. Check your inbox for the confirmation link.
+							<strong>Note:</strong> After signing up, you&apos;ll need to confirm your email address before you can sign in. Check your inbox for the confirmation link.
 						</div>
 					)}
 
