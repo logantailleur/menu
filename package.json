@@ -9,6 +9,7 @@
     "lint": "next lint",
     "clean": "rm -rf .next",
     "clean:all": "rm -rf .next node_modules package-lock.json",
+    "postinstall": "prisma generate",
     "db:generate": "prisma generate",
     "db:push": "prisma db push",
     "db:studio": "prisma studio"
