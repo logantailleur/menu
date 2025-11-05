@@ -1,0 +1,36 @@
+import { NextRequest, NextResponse } from 'next/server';
+import { prisma } from '../../../lib/prisma';
+
+// Get all public recipes (no authentication required)
+export async function GET(request: NextRequest) {
+	try {
+		const recipes = await prisma.recipe.findMany({
+			where: { isPublic: true },
+			include: {
+				recipeIngredients: {
+					include: {
+						ingredient: true,
+					},
+				},
+				steps: {
+					orderBy: { stepNumber: 'asc' },
+				},
+				user: {
+					select: {
+						email: true,
+					},
+				},
+			},
+			orderBy: { createdAt: 'desc' },
+		});
+
+		return NextResponse.json(recipes);
+	} catch (error) {
+		console.error('[/api/recipes/public] Error fetching public recipes:', error);
+		return NextResponse.json(
+			{ error: 'Internal server error' },
+			{ status: 500 }
+		);
+	}
+}
+

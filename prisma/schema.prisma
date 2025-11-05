@@ -1,0 +1,83 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+	provider = "prisma-client-js"
+}
+
+datasource db {
+	provider = "postgresql"
+	url      = env("DATABASE_URL")
+}
+
+model User {
+	id        String   @id @default(uuid())
+	email     String   @unique
+	createdAt DateTime @default(now())
+	updatedAt DateTime @updatedAt
+	
+	recipes         Recipe[]
+	ingredients     Ingredient[]
+	recipeIngredients RecipeIngredient[]
+	steps           Step[]
+}
+
+model Recipe {
+	id          String   @id @default(uuid())
+	userId      String
+	name        String
+	description String?
+	servings    Int      @default(1)
+	isPublic    Boolean  @default(false)
+	views       Int      @default(0)
+	createdAt   DateTime @default(now())
+	updatedAt   DateTime @updatedAt
+	
+	user            User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+	recipeIngredients RecipeIngredient[]
+	steps           Step[]
+}
+
+model Ingredient {
+	id            String   @id @default(uuid())
+	userId        String
+	name          String
+	calories      Float?   // Optional - overrides calculated calories if provided
+	protein       Float    // per 100g
+	carbs         Float    // per 100g
+	fat           Float     // per 100g
+	fiber         Float     // per 100g
+	sugar         Float     // per 100g
+	createdAt     DateTime @default(now())
+	
+	user              User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+	recipeIngredients RecipeIngredient[]
+}
+
+model RecipeIngredient {
+	id          String   @id @default(uuid())
+	recipeId    String
+	ingredientId String
+	userId      String
+	quantity    Float
+	unit        String
+	createdAt   DateTime @default(now())
+	
+	recipe    Recipe    @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+	ingredient Ingredient @relation(fields: [ingredientId], references: [id], onDelete: Cascade)
+	user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Step {
+	id          String   @id @default(uuid())
+	recipeId    String
+	userId      String
+	stepNumber  Int
+	instruction String
+	duration    Float?
+	createdAt   DateTime @default(now())
+	
+	recipe Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+	user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
