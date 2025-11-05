@@ -364,7 +364,7 @@ function RecipeGrid({
 						<div className="mb-3 sm:mb-4">
 							<h3 className="heading-3">Ingredients</h3>
 							<ul className="space-y-1 sm:space-y-1.5">
-								{recipeIngredients.map((ri) => {
+								{recipeIngredients.map((ri: { id: string; ingredientId: string; quantity: number; unit: string }) => {
 									const ingredientName = getIngredientName(ri.ingredientId);
 									return (
 										<li
