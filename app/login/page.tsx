@@ -41,7 +41,7 @@ export default function LoginPage() {
 		} else {
 			if (isSignUp) {
 				setSuccess(
-					"Account created! Please check your email to confirm your account before signing in."
+					"Account created! Please input your email and password again to sign in."
 				);
 				setTimeout(() => {
 					setIsSignUp(false);
