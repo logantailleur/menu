@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from './supabase';
-import { prisma } from './prisma';
+import { NextRequest, NextResponse } from "next/server";
+import { prisma } from "./prisma";
+import { supabase } from "./supabase";
 
 export interface AuthenticatedUser {
 	id: string;
@@ -13,17 +13,23 @@ export interface AuthenticatedUser {
  */
 export async function authenticateRequest(
 	request: NextRequest
-): Promise<{ user: AuthenticatedUser; response: null } | { user: null; response: NextResponse }> {
+): Promise<
+	| { user: AuthenticatedUser; response: null }
+	| { user: null; response: NextResponse }
+> {
 	try {
-		const authHeader = request.headers.get('authorization');
+		const authHeader = request.headers.get("authorization");
 		if (!authHeader) {
 			return {
 				user: null,
-				response: NextResponse.json({ error: 'Unauthorized' }, { status: 401 }),
+				response: NextResponse.json(
+					{ error: "Unauthorized" },
+					{ status: 401 }
+				),
 			};
 		}
 
-		const token = authHeader.replace('Bearer ', '');
+		const token = authHeader.replace("Bearer ", "");
 		const {
 			data: { user },
 			error,
@@ -32,7 +38,10 @@ export async function authenticateRequest(
 		if (error || !user) {
 			return {
 				user: null,
-				response: NextResponse.json({ error: 'Unauthorized' }, { status: 401 }),
+				response: NextResponse.json(
+					{ error: "Unauthorized" },
+					{ status: 401 }
+				),
 			};
 		}
 
@@ -45,7 +54,7 @@ export async function authenticateRequest(
 			await prisma.user.create({
 				data: {
 					id: user.id,
-					email: user.email || '',
+					email: user.email || "",
 				},
 			});
 		}
@@ -53,18 +62,19 @@ export async function authenticateRequest(
 		return {
 			user: {
 				id: user.id,
-				email: user.email || '',
+				email: user.email || "",
 			},
 			response: null,
 		};
 	} catch (error) {
-		console.error('[API Auth] Error authenticating request:', error);
+		console.error("[API Auth] Error authenticating request:", error);
 		return {
 			user: null,
 			response: NextResponse.json(
 				{
-					error: 'Internal server error',
-					details: error instanceof Error ? error.message : String(error),
+					error: "Internal server error",
+					details:
+						error instanceof Error ? error.message : String(error),
 				},
 				{ status: 500 }
 			),
@@ -77,7 +87,10 @@ export async function authenticateRequest(
  * Automatically handles authentication and passes the user to the handler.
  */
 export function withAuth<T = any>(
-	handler: (request: NextRequest, user: AuthenticatedUser) => Promise<NextResponse>
+	handler: (
+		request: NextRequest,
+		user: AuthenticatedUser
+	) => Promise<NextResponse>
 ) {
 	return async (request: NextRequest) => {
 		const authResult = await authenticateRequest(request);
@@ -87,4 +100,3 @@ export function withAuth<T = any>(
 		return handler(request, authResult.user!);
 	};
 }
-
