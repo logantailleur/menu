@@ -68,10 +68,15 @@ export async function authenticateRequest(
 		} = await supabase.auth.getUser(token);
 
 		if (error || !user) {
+			console.error("[API Auth] Token validation failed:", {
+				error: error?.message,
+				hasToken: !!token,
+				tokenLength: token?.length,
+			});
 			return {
 				user: null,
 				response: NextResponse.json(
-					{ error: "Unauthorized" },
+					{ error: "Unauthorized", details: error?.message },
 					{ status: 401 }
 				),
 			};

@@ -5,6 +5,7 @@ import { useEffect, useState, useRef } from "react";
 import { Ingredient, Recipe } from "../types/recipe";
 import { calculateMacrosFromIngredients } from "../utils/calculations";
 import LoadingSpinner from "../components/LoadingSpinner";
+import RecipeCard from "../components/RecipeCard";
 
 interface PublicRecipe extends Recipe {
 	recipeIngredients: any[];
@@ -91,6 +92,11 @@ export default function PublicRecipesPage() {
 		);
 	};
 
+	const getIngredientName = (ingredientId: string) => {
+		const ingredient = ingredients.find((i) => i.id === ingredientId);
+		return ingredient ? ingredient.name : "";
+	};
+
 	if (loading) {
 		return (
 			<div className="fixed inset-0 flex items-center justify-center z-40">
@@ -127,112 +133,27 @@ export default function PublicRecipesPage() {
 						{recipes.map((recipe) => {
 							const macros = getRecipeMacros(recipe);
 							return (
-								<div
+								<RecipeCard
 									key={recipe.id}
-									className="card-small hover:shadow-xl hover:-translate-y-1 transition-all cursor-pointer"
+									recipe={recipe}
+									macros={macros}
+									recipeIngredients={recipe.recipeIngredients.map((ri) => ({
+										id: ri.id,
+										ingredientId: ri.ingredientId,
+										quantity: ri.quantity,
+										unit: ri.unit,
+									}))}
+									steps={recipe.steps.map((step) => ({
+										id: step.id,
+										stepNumber: step.stepNumber,
+										instruction: step.instruction,
+										duration: step.duration,
+									}))}
+									getIngredientName={getIngredientName}
 									onClick={() => handleRecipeClick(recipe.id)}
-								>
-									<div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-3 sm:mb-4 gap-2">
-										<div className="flex-1">
-											<h2 className="text-xl sm:text-2xl font-bold text-primary mb-1 sm:mb-2">
-												{recipe.name}
-											</h2>
-											{recipe.description && (
-												<p className="text-primary-muted text-xs sm:text-sm mb-1 sm:mb-2">
-													{recipe.description}
-												</p>
-											)}
-											<div className="flex flex-wrap gap-2 text-xs sm:text-sm text-primary-muted">
-												<span>Serves: {recipe.servings}</span>
-												<span>•</span>
-												<span>By: {recipe.user.email}</span>
-												{recipe.views !== undefined && recipe.views > 0 && (
-													<>
-														<span>•</span>
-														<span>{recipe.views} {recipe.views === 1 ? 'view' : 'views'}</span>
-													</>
-												)}
-											</div>
-										</div>
-									</div>
-
-									<div className="mb-3 sm:mb-4">
-										<h3 className="heading-3">Macros per Serving</h3>
-										<div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-											{macros.calories !== undefined && (
-												<div className="macro-card">
-													<div className="macro-label">Calories</div>
-													<div className="macro-value">{macros.calories}</div>
-												</div>
-											)}
-											<div className="macro-card">
-												<div className="macro-label">Protein</div>
-												<div className="macro-value">{macros.protein}g</div>
-											</div>
-											<div className="macro-card">
-												<div className="macro-label">Carbs</div>
-												<div className="macro-value">{macros.carbs}g</div>
-											</div>
-											<div className="macro-card">
-												<div className="macro-label">Fat</div>
-												<div className="macro-value">{macros.fat}g</div>
-											</div>
-											{macros.fiber !== undefined && macros.fiber > 0 && (
-												<div className="macro-card">
-													<div className="macro-label">Fiber</div>
-													<div className="macro-value">{macros.fiber}g</div>
-												</div>
-											)}
-											{macros.sugar !== undefined && macros.sugar > 0 && (
-												<div className="macro-card">
-													<div className="macro-label">Sugar</div>
-													<div className="macro-value">{macros.sugar}g</div>
-												</div>
-											)}
-										</div>
-									</div>
-
-									<div className="mb-3 sm:mb-4">
-										<h3 className="heading-3">Ingredients</h3>
-										<ul className="space-y-1 sm:space-y-1.5">
-											{recipe.recipeIngredients.map((ri) => (
-												<li
-													key={ri.id}
-													className="text-primary-muted text-xs sm:text-sm flex items-start"
-												>
-													<span className="text-secondary mr-2">•</span>
-													<span>
-														{ri.quantity} {ri.unit} {ri.ingredient?.name || 'Unknown'}
-													</span>
-												</li>
-											))}
-										</ul>
-									</div>
-
-									<div>
-										<h3 className="heading-3">Steps</h3>
-										<ol className="space-y-2 sm:space-y-3 pl-2 sm:pl-4">
-											{recipe.steps.map((step) => (
-												<li
-													key={step.id}
-													className="text-primary-muted text-xs sm:text-sm"
-												>
-													<div className="flex items-start">
-														<span className="step-number">{step.stepNumber}</span>
-														<div className="flex-1">
-															<div>{step.instruction}</div>
-															{step.duration && (
-																<div className="text-primary-muted text-xs mt-1">
-																	⏱️ {step.duration} minutes
-																</div>
-															)}
-														</div>
-													</div>
-												</li>
-											))}
-										</ol>
-									</div>
-								</div>
+									showAuthor={true}
+									authorEmail={recipe.user.email}
+								/>
 							);
 						})}
 					</div>

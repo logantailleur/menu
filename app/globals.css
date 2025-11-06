@@ -139,15 +139,29 @@
 	}
 
 	.navbar {
-		@apply flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0 py-3 sm:py-4;
+		@apply relative w-full py-3 sm:py-4;
 	}
 
 	.navbar-nav {
-		@apply flex flex-col sm:flex-row gap-2 sm:gap-4 lg:gap-6;
+		@apply flex flex-row gap-2 sm:gap-4 lg:gap-6;
 	}
 
 	.navbar-actions {
 		@apply flex items-center gap-3;
+	}
+
+	/* Mobile Menu Animation */
+	@keyframes slideInLeft {
+		from {
+			transform: translateX(-100%);
+		}
+		to {
+			transform: translateX(0);
+		}
+	}
+
+	.mobile-menu {
+		animation: slideInLeft 0.3s ease-out;
 	}
 
 	.macro-card {
@@ -207,11 +221,11 @@
 	}
 
 	.step-card {
-		@apply bg-tertiary rounded-xl p-3 sm:p-4 border-l-4 border-secondary border-2 border-r border-t border-b border-primary;
+		@apply bg-tertiary rounded-xl p-3 sm:p-4 border-l-4 border-secondary border-2 border-r border-t border-b border-primary transition-all hover:shadow-md hover:border-secondary;
 	}
 
 	.step-number {
-		@apply bg-secondary text-white rounded-full w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center text-xs sm:text-sm font-bold flex-shrink-0 mt-1 border-2 border-action-600 dark:border-action-500 shadow-sm;
+		@apply bg-gradient-to-br from-action-500 to-action-600 dark:from-action-400 dark:to-action-500 text-white rounded-full w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center text-sm sm:text-base font-bold flex-shrink-0 shadow-md border-2 border-action-600 dark:border-action-400;
 	}
 
 	.modal-overlay {

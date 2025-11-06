@@ -2,7 +2,15 @@
 
 import { useEffect, useState } from "react";
 
-export default function DarkModeToggle() {
+interface DarkModeToggleProps {
+	className?: string;
+	variant?: "sidebar" | "floating";
+}
+
+export default function DarkModeToggle({
+	className = "",
+	variant = "floating",
+}: DarkModeToggleProps) {
 	const [mounted, setMounted] = useState(false);
 	const [darkMode, setDarkMode] = useState(false);
 
@@ -22,7 +30,7 @@ export default function DarkModeToggle() {
 		const newDarkMode = !darkMode;
 		setDarkMode(newDarkMode);
 		localStorage.setItem("darkMode", newDarkMode.toString());
-		
+
 		if (newDarkMode) {
 			document.documentElement.classList.add("dark");
 		} else {
@@ -35,10 +43,15 @@ export default function DarkModeToggle() {
 		return null;
 	}
 
+	const baseClasses =
+		variant === "sidebar"
+			? "p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-navy-700 transition-colors border-2 border-transparent hover:border-slate-200 dark:hover:border-action-500/30 w-full flex items-center justify-center gap-2"
+			: "fixed bottom-3 left-3 sm:bottom-4 sm:left-4 z-50 p-2.5 sm:p-3 rounded-full bg-primary backdrop-blur-sm shadow-lg border-2 border-primary active:scale-95 hover:scale-110 transition-all duration-300 touch-manipulation hover:border-secondary";
+
 	return (
 		<button
 			onClick={toggleDarkMode}
-			className="fixed bottom-3 left-3 sm:bottom-4 sm:left-4 z-50 p-2.5 sm:p-3 rounded-full bg-primary backdrop-blur-sm shadow-lg border-2 border-primary active:scale-95 hover:scale-110 transition-all duration-300 touch-manipulation hover:border-secondary"
+			className={`${baseClasses} ${className}`}
 			aria-label="Toggle dark mode"
 		>
 			{darkMode ? (
@@ -69,6 +82,11 @@ export default function DarkModeToggle() {
 						d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
 					/>
 				</svg>
+			)}
+			{variant === "sidebar" && (
+				<span className="text-sm text-slate-700 dark:text-action-300">
+					{darkMode ? "Light Mode" : "Dark Mode"}
+				</span>
 			)}
 		</button>
 	);

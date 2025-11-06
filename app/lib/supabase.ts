@@ -25,6 +25,7 @@ function getSupabaseClient(): SupabaseClient {
 }
 
 // Export a getter that initializes on first access
+// This works for both client and server-side usage
 export const supabase = new Proxy({} as SupabaseClient, {
 	get(_target, prop) {
 		const client = getSupabaseClient();
