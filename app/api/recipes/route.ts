@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '../../lib/prisma';
 import { withAuth } from '../../lib/api-auth';
 
+// Force dynamic rendering to prevent DB access during build
+export const dynamic = "force-dynamic";
+
 export const GET = withAuth(async (request: NextRequest, user) => {
 	try {
 		const recipes = await prisma.recipe.findMany({

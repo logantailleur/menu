@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { withAuth } from "../../lib/api-auth";
 import { prisma } from "../../lib/prisma";
 
+// Force dynamic rendering to prevent DB access during build
+export const dynamic = "force-dynamic";
+
 // Create or update user in database
 export const POST = withAuth(async (request: NextRequest, user) => {
 	try {

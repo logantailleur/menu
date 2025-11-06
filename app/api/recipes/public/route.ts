@@ -1,5 +1,8 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '../../../lib/prisma';
+import { NextRequest, NextResponse } from "next/server";
+import { prisma } from "../../../lib/prisma";
+
+// Force dynamic rendering to prevent DB access during build
+export const dynamic = "force-dynamic";
 
 // Get all public recipes (no authentication required)
 export async function GET(request: NextRequest) {
@@ -13,7 +16,7 @@ export async function GET(request: NextRequest) {
 					},
 				},
 				steps: {
-					orderBy: { stepNumber: 'asc' },
+					orderBy: { stepNumber: "asc" },
 				},
 				user: {
 					select: {
@@ -21,16 +24,18 @@ export async function GET(request: NextRequest) {
 					},
 				},
 			},
-			orderBy: { createdAt: 'desc' },
+			orderBy: { createdAt: "desc" },
 		});
 
 		return NextResponse.json(recipes);
 	} catch (error) {
-		console.error('[/api/recipes/public] Error fetching public recipes:', error);
+		console.error(
+			"[/api/recipes/public] Error fetching public recipes:",
+			error
+		);
 		return NextResponse.json(
-			{ error: 'Internal server error' },
+			{ error: "Internal server error" },
 			{ status: 500 }
 		);
 	}
 }
-
