@@ -57,6 +57,20 @@ You need to set the following environment variables in your Vercel project:
 
 ## Troubleshooting
 
+### Error: "prepared statement 's0' already exists"
+
+This error occurs when using Prisma with PgBouncer (Supabase's connection pooler) in transaction pooling mode. Prisma uses prepared statements by default, but PgBouncer doesn't maintain session state between transactions.
+
+**Solution:**
+The application automatically adds the required parameters to your connection string:
+- `pgbouncer=true` - Tells Prisma to disable prepared statements
+- `connection_limit=1` - Optimizes for serverless environments
+
+**If you still see this error:**
+1. Make sure your `DATABASE_URL` includes `?pgbouncer=true` (the app will add it automatically if missing)
+2. Verify you're using the connection pooler (port 6543), not direct connection (port 5432)
+3. Redeploy your application after updating environment variables
+
 ### Error: "Tenant or user not found" or "FATAL"
 
 This error means your `DATABASE_URL` is incorrect or missing.
