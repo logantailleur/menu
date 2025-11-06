@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
@@ -276,6 +277,22 @@ export default function LoginPage() {
 								? "Already have an account? Sign in"
 								: "Don't have an account? Sign up"}
 						</button>
+					</div>
+
+					<div className="mt-6 pt-6 border-t-2 border-primary">
+						<div className="text-center">
+							<p className="text-primary-muted text-sm mb-3">
+								Want to browse without signing in?
+							</p>
+							<Link href="/public">
+								<button
+									type="button"
+									className="btn-secondary btn-full w-full"
+								>
+									View Public Recipes
+								</button>
+							</Link>
+						</div>
 					</div>
 				</div>
 			</div>

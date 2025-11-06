@@ -1,5 +1,13 @@
 "use client";
 
+/**
+ * Public Recipes Page
+ * 
+ * This page is publicly accessible and does NOT require authentication.
+ * Both logged-in and logged-out users can view public recipes.
+ * It is NOT wrapped in ProtectedRoute, allowing unauthenticated access.
+ */
+
 import Link from "next/link";
 import { useEffect, useState, useRef } from "react";
 import { Ingredient, Recipe } from "../types/recipe";
