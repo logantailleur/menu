@@ -151,6 +151,7 @@ Create a `.env.local` file in the root directory:
 
 ```env
 # Supabase (get these from https://supabase.com)
+# Note: NEXT_PUBLIC_ prefix is required for client-side access in Next.js
 NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key-here
 
@@ -164,6 +165,8 @@ DATABASE_URL=postgresql://postgres:[YOUR-PASSWORD]@db.your-project.supabase.co:5
 2. **NEXT_PUBLIC_SUPABASE_URL:** Settings → API → Project URL
 3. **NEXT_PUBLIC_SUPABASE_ANON_KEY:** Settings → API → anon/public key
 4. **DATABASE_URL:** Settings → Database → Connection string → URI format (replace `[YOUR-PASSWORD]` with your database password)
+
+**Important:** The `NEXT_PUBLIC_` prefix is required because Supabase is used in client-side components. Next.js only exposes environment variables with this prefix to the browser.
 
 ### 3. Set Up Database Schema
 
