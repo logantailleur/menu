@@ -8,6 +8,38 @@ export interface AuthenticatedUser {
 }
 
 /**
+ * Checks if an error is a database connection error
+ */
+export function isDatabaseError(error: unknown): boolean {
+	const errorMessage = error instanceof Error ? error.message : String(error);
+	return (
+		errorMessage.includes("Tenant or user not found") ||
+		errorMessage.includes("FATAL") ||
+		errorMessage.includes("DATABASE_URL") ||
+		errorMessage.includes("connection")
+	);
+}
+
+/**
+ * Creates a standardized error response with helpful hints for database errors
+ */
+export function createErrorResponse(error: unknown, status: number = 500) {
+	const errorMessage = error instanceof Error ? error.message : String(error);
+	const dbError = isDatabaseError(error);
+	
+	return NextResponse.json(
+		{
+			error: "Internal server error",
+			details: errorMessage,
+			...(dbError && {
+				hint: "This looks like a database connection issue. Please check that DATABASE_URL is set correctly in your Vercel environment variables."
+			}),
+		},
+		{ status }
+	);
+}
+
+/**
  * Authenticates the request and ensures the user exists in the database.
  * Returns the authenticated user or an error response.
  */
@@ -70,14 +102,7 @@ export async function authenticateRequest(
 		console.error("[API Auth] Error authenticating request:", error);
 		return {
 			user: null,
-			response: NextResponse.json(
-				{
-					error: "Internal server error",
-					details:
-						error instanceof Error ? error.message : String(error),
-				},
-				{ status: 500 }
-			),
+			response: createErrorResponse(error),
 		};
 	}
 }

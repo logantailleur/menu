@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '../../lib/prisma';
-import { withAuth } from '../../lib/api-auth';
+import { withAuth, createErrorResponse } from '../../lib/api-auth';
 
 // Force dynamic rendering to prevent DB access during build
 export const dynamic = "force-dynamic";
@@ -25,10 +25,7 @@ export const GET = withAuth(async (request: NextRequest, user) => {
 		return NextResponse.json(recipes);
 	} catch (error) {
 		console.error('[/api/recipes] Error fetching recipes:', error);
-		return NextResponse.json(
-			{ error: 'Internal server error' },
-			{ status: 500 }
-		);
+		return createErrorResponse(error);
 	}
 });
 
@@ -75,10 +72,7 @@ export const POST = withAuth(async (request: NextRequest, user) => {
 		return NextResponse.json(recipe);
 	} catch (error) {
 		console.error('[/api/recipes] Error creating recipe:', error);
-		return NextResponse.json(
-			{ error: 'Internal server error' },
-			{ status: 500 }
-		);
+		return createErrorResponse(error);
 	}
 });
 
@@ -98,10 +92,7 @@ export const DELETE = withAuth(async (request: NextRequest, user) => {
 		return NextResponse.json({ success: true });
 	} catch (error) {
 		console.error('[/api/recipes] Error deleting recipe:', error);
-		return NextResponse.json(
-			{ error: 'Internal server error' },
-			{ status: 500 }
-		);
+		return createErrorResponse(error);
 	}
 });
 
@@ -129,10 +120,7 @@ export const PATCH = withAuth(async (request: NextRequest, user) => {
 		return NextResponse.json({ success: true });
 	} catch (error) {
 		console.error('[/api/recipes] Error updating recipe:', error);
-		return NextResponse.json(
-			{ error: 'Internal server error' },
-			{ status: 500 }
-		);
+		return createErrorResponse(error);
 	}
 });
 

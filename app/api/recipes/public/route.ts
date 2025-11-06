@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "../../../lib/prisma";
+import { createErrorResponse } from "../../../lib/api-auth";
 
 // Force dynamic rendering to prevent DB access during build
 export const dynamic = "force-dynamic";
@@ -33,9 +34,6 @@ export async function GET(request: NextRequest) {
 			"[/api/recipes/public] Error fetching public recipes:",
 			error
 		);
-		return NextResponse.json(
-			{ error: "Internal server error" },
-			{ status: 500 }
-		);
+		return createErrorResponse(error);
 	}
 }

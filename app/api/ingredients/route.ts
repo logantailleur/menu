@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '../../lib/prisma';
-import { withAuth } from '../../lib/api-auth';
+import { withAuth, createErrorResponse } from '../../lib/api-auth';
 
 // Force dynamic rendering to prevent DB access during build
 export const dynamic = "force-dynamic";
@@ -16,10 +16,7 @@ export const GET = withAuth(async (request: NextRequest, user) => {
 		return NextResponse.json(ingredients);
 	} catch (error) {
 		console.error('[/api/ingredients] Error fetching ingredients:', error);
-		return NextResponse.json(
-			{ error: 'Internal server error' },
-			{ status: 500 }
-		);
+		return createErrorResponse(error);
 	}
 });
 
@@ -44,10 +41,7 @@ export const POST = withAuth(async (request: NextRequest, user) => {
 		return NextResponse.json(ingredient);
 	} catch (error) {
 		console.error('[/api/ingredients] Error creating ingredient:', error);
-		return NextResponse.json(
-			{ error: 'Internal server error' },
-			{ status: 500 }
-		);
+		return createErrorResponse(error);
 	}
 });
 
@@ -67,10 +61,7 @@ export const DELETE = withAuth(async (request: NextRequest, user) => {
 		return NextResponse.json({ success: true });
 	} catch (error) {
 		console.error('[/api/ingredients] Error deleting ingredient:', error);
-		return NextResponse.json(
-			{ error: 'Internal server error' },
-			{ status: 500 }
-		);
+		return createErrorResponse(error);
 	}
 });
 

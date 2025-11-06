@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { createErrorResponse } from "../../../../lib/api-auth";
 import { prisma } from "../../../../lib/prisma";
 
 // Force dynamic rendering to prevent DB access during build
@@ -46,9 +47,6 @@ export async function POST(
 			"[/api/recipes/[id]/views] Error incrementing views:",
 			error
 		);
-		return NextResponse.json(
-			{ error: "Internal server error" },
-			{ status: 500 }
-		);
+		return createErrorResponse(error);
 	}
 }

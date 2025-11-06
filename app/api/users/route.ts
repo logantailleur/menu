@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { withAuth } from "../../lib/api-auth";
+import { withAuth, createErrorResponse } from "../../lib/api-auth";
 import { prisma } from "../../lib/prisma";
 
 // Force dynamic rendering to prevent DB access during build
@@ -26,12 +26,6 @@ export const POST = withAuth(async (request: NextRequest, user) => {
 		return NextResponse.json({ success: true, user: newUser });
 	} catch (error) {
 		console.error("[/api/users] Error creating user:", error);
-		return NextResponse.json(
-			{
-				error: "Internal server error",
-				details: error instanceof Error ? error.message : String(error),
-			},
-			{ status: 500 }
-		);
+		return createErrorResponse(error);
 	}
 });
