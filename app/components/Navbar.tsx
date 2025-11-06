@@ -19,11 +19,6 @@ export default function Navbar() {
 		setIsMounted(true);
 	}, []);
 
-	// Don't show navbar on login page
-	if (pathname === "/login") {
-		return null;
-	}
-
 	// Close mobile menu when route changes
 	useEffect(() => {
 		setIsMobileMenuOpen(false);
@@ -41,6 +36,11 @@ export default function Navbar() {
 			document.body.style.overflow = "";
 		};
 	}, [isMobileMenuOpen]);
+
+	// Don't show navbar on login page
+	if (pathname === "/login") {
+		return null;
+	}
 
 	// Check if user is authenticated
 	const isAuthenticated = !!user;
